@@ -1,0 +1,7 @@
+[user]
+	email = allareri@gmail.com
+	name = ezy023
+[alias]
+	co = checkout
+[core]
+	editor = subl -w
