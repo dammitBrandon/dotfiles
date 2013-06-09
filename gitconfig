@@ -5,3 +5,5 @@
 	co = checkout
 [core]
 	editor = subl -w
+[color]
+  ui = auto

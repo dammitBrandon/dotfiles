@@ -1,56 +1,169 @@
+" *** NEW CONFIG ***
 call pathogen#infect()
-set tabstop=4 " Tab characters = 4 spaces when displayed
-set shiftwidth=2 " Use 2 spaces for each insertion of (auto)indent
-set softtabstop=2 " Tabs 'count for' 2 spaces when editing (fake tabs)
-set expandtab " <tab> -> spaces in insert mode
-set autoindent " always set autoindenting on
-set smarttab " Smart tabbing!
-set shiftround " < and > will hit indent levels instead of +-4 always
-set hlsearch
-set incsearch
-set backspace=2
+" Use Vim settings, rather then Vi settings (much better!).
+" This must be first, because it changes other options as a side effect.
+set nocompatible               " be iMproved
+filetype off                   " required!
+
+"set rtp+=~/.vim/bundle/vundle/
+"call vundle#rc()
+"
+"" let Vundle manage Vundle
+"" required for Vundle
+"Bundle 'gmarik/vundle'
+"
+"" My Bundles here:
+"" original repos on github
+"Bundle 'mileszs/ack.vim'
+"Bundle 'juvenn/mustache.vim'
+"Bundle 'hashrocket/slurper'
+"Bundle 'kchmck/vim-coffee-script'
+"Bundle 'tpope/vim-cucumber'
+"Bundle 'tpope/vim-endwise'
+"Bundle 'tpope/vim-fugitive'
+"Bundle 'tpope/vim-haml'
+"Bundle 'pangloss/vim-javascript'
+"Bundle 'tpope/vim-markdown'
+"Bundle 'ornicar/vim-mru'
+"Bundle 'tpope/vim-rails'
+"Bundle 'vim-ruby/vim-ruby'
+"Bundle 'tpope/vim-surround'
+"Bundle 'tpope/vim-unimpaired'
+"Bundle 'git://github.com/wincent/Command-T.git'
+"
+"" required for Vundle
+filetype plugin indent on
+
+" Softtabs, 2 spaces
+set tabstop=2
+set shiftwidth=2
+set expandtab
+"set bs=2
+
+" Always display the status line
+set laststatus=2
+
+" Display incomplete commands
+set showcmd
+
+" Up the undo and history
+set history=1000         " remember more commands and search history
+set undolevels=1000      " use many muchos levels of undo
+
+" No tmp files!:
+set nobackup
+set noswapfile
+
+" Color scheme
+set t_Co=256
+colorscheme molokai
+" highlight NonText guibg=#060606
+" highlight Folded  guibg=#0A0A0A guifg=#9090D0
+
+" Numbers
 set number
-set wrap
-set linebreak
-set nolist
-set iskeyword-=_
-set clipboard=unnamed
-noremap <buffer> <silent> k gk
-noremap <buffer> <silent> j gj
-set nocompatible " stuff for ruby auto indent
+set numberwidth=5
+
+" Syntax Highlighting
 syntax on
-" syntax enable
-filetype indent on " stuff for ruby formattin
-filetype plugin on
-" set list listchars=tab:»·,trail:·
-" autocmd VimEnter * NERDTree
-" let NERDTreeDirArrows=0
-" autocmd vimenter * if !argc() | NERDTree | endif
-set paste
-" nmap \nt :NERDTree<CR>
-" nmap \nc :NERDTreeClose<CR>
-set ruler
-" Change background color depending on running environment
-if has('gui_running')
-    set background=light
-else
-    set background=dark
+set hlsearch
+
+" Display extra whitespace
+set list 
+set listchars=tab:>-,trail:.
+
+" case only matters with mixed case expressions
+set ignorecase
+set smartcase
+
+" Tab completion options
+" (only complete to the longest unambiguous match, and show a menu)
+set completeopt=longest,menu
+set wildmode=list:longest,list:full
+
+" Load indent files, to automatically do language-dependent indenting.
+filetype plugin indent on
+
+" All splits should be at least 30 lines tall (auto resizing focused split)
+" And splits should be a minimum of 5 lines tall
+" set winheight=30
+" set winminheight=5
+
+" Leader + Custom Mappings
+let mapleader = "\\"
+
+"" -- Quickly edit vimrc
+"map <Leader>qq :sp ~/.vimrc<CR><C-W>_ 
+"
+"" -- Open MRU (Most Recently Used plugin)
+"map <Leader>m :MRU 
+"
+"" -- Close current window
+"map <Leader>x :close<CR>
+"
+"" -- Close quickfix window
+"map <Leader>c :cclose<CR>
+"
+"let g:CommandTMaxFiles=50000
+"set wildignore+=.git,tmp,log,*.png,*.jpg,*.jpeg,*.gif,public/analytic,public/fonts,public/sounds,public/images,public/flash
+
+" END CUSTOM LEADER COMMANDS
+
+" Maps autocomplete to tab
+" imap <Tab> <C-N>
+
+" use ctr h & l to switch between windows, skip need to crt w + l
+map <C-H> <C-W>h
+map <C-L> <C-W>l
+" same for j & k
+map <C-J> <C-W>j
+map <C-K> <C-W>k
+
+" Local config
+if filereadable(".vimrc.local")
+  source .vimrc.local
 endif
 
+" Test helpers from Gary Bernhardt's screen cast:
+" https://www.destroyallsoftware.com/screencasts/catalog/file-navigation-in-vim
+" https://www.destroyallsoftware.com/file-navigation-in-vim.html
+function! RunTests(filename)
+    " Write the file and run tests for the given filename
+    :w
+    :silent !echo;echo;echo;echo;echo
+    exec ":!clear; time rspec " . a:filename
+endfunction
 
-" IMPORTANT: Uncomment one of the following lines to force
-" using 256 colors (or 88 colors) if your terminal supports it,
-" but does not automatically use 256 colors by default.
-"set t_Co=256
-"set t_Co=88
-if (&t_Co == 256 || &t_Co == 88) && !has('gui_running') &&
-  \ filereadable(expand("$HOME/.vim/plugin/guicolorscheme.vim"))
-  " Use the guicolorscheme plugin to makes 256-color or 88-color
-  " terminal use GUI colors rather than cterm colors.
-  runtime! plugin/guicolorscheme.vim
-  colorscheme molokai 
-else
-  " For 8-color 16-color terminals or for gvim, just use the
-  " regular :colorscheme command.
-  colorscheme molokai 
-endif
+function! SetTestFile()
+    " Set the spec file that tests will be run for.
+    let t:grb_test_file=@%
+endfunction
+
+function! RunTestFile(...)
+    if a:0
+        let command_suffix = a:1
+    else
+        let command_suffix = ""
+    endif
+
+    " Run the tests for the previously-marked file.
+    let in_spec_file = match(expand("%"), '_spec.rb$') != -1
+    if in_spec_file
+        call SetTestFile()
+    elseif !exists("t:grb_test_file")
+        return
+    end
+    call RunTests(t:grb_test_file . command_suffix)
+endfunction
+
+function! RunNearestTest()
+    let spec_line_number = line('.')
+    call RunTestFile(":" . spec_line_number)
+endfunction
+
+" Run this file
+map <leader>m :call RunTestFile()<cr>
+" Run only the example under the cursor
+map <leader>. :call RunNearestTest()<cr>
+" Run all test files
+map <leader>a :call RunTests('spec')<cr>ndif
