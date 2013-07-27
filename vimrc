@@ -30,7 +30,11 @@ Bundle 'vim-ruby/vim-ruby'
 Bundle 'tpope/vim-surround'
 "Bundle 'tpope/vim-unimpaired'
 Bundle 'thoughtbot/vim-rspec'
-"Bundle 'git://github.com/wincent/Command-T.git'
+Bundle 'kien/ctrlp.vim'
+Bundle 'bling/vim-airline'
+Bundle 'http://github.com/mattn/zencoding-vim.git'
+Bundle 'http://github.com/tpope/vim-fugitive.git'
+Bundle 'https://github.com/tpope/vim-git'
 "
 "" required for Vundle
 filetype plugin indent on
@@ -70,7 +74,7 @@ syntax on
 set hlsearch
 
 " Display extra whitespace
-set list 
+set list
 set listchars=tab:>-,trail:.
 
 " case only matters with mixed case expressions
@@ -84,6 +88,9 @@ set wildmode=list:longest,list:full
 
 " Load indent files, to automatically do language-dependent indenting.
 filetype plugin indent on
+
+" Remove trailing whitespace on save
+autocmd BufWritePre * :%s/\s\+$//e
 
 
 " Leader + Custom Mappings
@@ -101,8 +108,10 @@ if filereadable(".vimrc.local")
 endif
 
 "Rspec.vim mappings
-map <Leader>t :call RunCurrentSpecFile()<CR>
+map <Leader>. :call RunCurrentSpecFile()<CR>
 map <Leader>s :call RunNearestSpec()<CR>
 map <Leader>l :call RunLastSpec()<CR>
 map <Leader>a :call RunAllSpecs()<CR>
 
+"Rspec vim override
+let g:rspec_command = '!bundle exec rspec --drb {spec}'
