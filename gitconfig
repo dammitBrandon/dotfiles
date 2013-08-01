@@ -6,6 +6,6 @@
 [alias]
 lg = log --graph --pretty=format:'%Cred%h%Creset%C(yellow)%d%Creset %s %C(black bold)- %an %Cgreen(%cr)%Creset' --abbrev-commit --date=relative
 [core]
-	editor = subl -w
+	editor = "vim"
 [color]
   ui = auto
