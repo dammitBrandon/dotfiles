@@ -30,11 +30,18 @@ Bundle 'vim-ruby/vim-ruby'
 Bundle 'tpope/vim-surround'
 "Bundle 'tpope/vim-unimpaired'
 Bundle 'thoughtbot/vim-rspec'
-Bundle 'kien/ctrlp.vim'
+"Bundle 'kien/ctrlp.vim'
+Bundle 'mattn/emmet-vim.git'
 Bundle 'bling/vim-airline'
 Bundle 'http://github.com/mattn/zencoding-vim.git'
 Bundle 'http://github.com/tpope/vim-fugitive.git'
-Bundle 'https://github.com/tpope/vim-git'
+Bundle 'jiangmiao/auto-pairs'
+Bundle 'mileszs/ack.vim'
+Bundle 'tpope/vim-endwise'
+Bundle 'juvenn/mustache.vim'
+Bundle 'cakebaker/scss-syntax.vim'
+Bundle 'c.vim'
+Bundle 'kien/ctrlp.vim'
 "
 "" required for Vundle
 filetype plugin indent on
@@ -61,7 +68,7 @@ set noswapfile
 
 " Color scheme
 set t_Co=256
-colorscheme molokai
+colorscheme vividchalk
 " highlight NonText guibg=#060606
 " highlight Folded  guibg=#0A0A0A guifg=#9090D0
 
@@ -115,3 +122,6 @@ map <Leader>a :call RunAllSpecs()<CR>
 
 "Rspec vim override
 let g:rspec_command = '!bundle exec rspec --drb {spec}'
+
+"emmet shortcut
+let g:user_emmet_expandabbr_key = '<c-e>'
